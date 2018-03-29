@@ -44,7 +44,7 @@ for stud in stud_grades:
     rating[stud] = sum(stud_grades[stud])
 
 print('Top 3 students:')
-rating = sorted(rating, reverse=True, key=rating.get)[0:3]
+rating = sorted(rating, reverse=True, key=rating.get)[:3]
 for j in rating:
     print('Student {} - {}'.format(j, sum(stud_grades.get(j))))
 
@@ -53,9 +53,9 @@ for j in rating:
 hard_task = dict().fromkeys(range(task_count), 0)
 grade_list = []
 for grade_list_key in stud_grades:
-    for ind in range(5):
+    for ind in range(task_count):
         hard_task[ind] += stud_grades.get(grade_list_key)[ind]
-hard_task = sorted(hard_task, key=hard_task.get)[0:3]
+hard_task = sorted(hard_task, key=hard_task.get)[:3]
 print('Top 3 of hardest tasks:')
 for hrdtsk in hard_task:
     print('Task {}'.format(hrdtsk+1))
