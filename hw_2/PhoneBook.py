@@ -9,23 +9,13 @@ def pbook_add() -> None:
     print('New entry addition')
 
     name = pbook_ask_name()
-    """
-    # Checking whether the name string contains only alphabetic characters
-    while True:
-        name = str(input('Enter name: '))
-        # Remove all spaces
-       if not name.replace(' ', '').isalpha():
-            print('Are you sure that "{}" is a normal human name? Try again.'.format(name))
-            continue
-        else:
-            break
-    """
+
     # Checking phone number is numeric only
     while True:
         pnumber = str(input('Enter number for {}: '.format(name)))
         # Remove whitespaces to allow type number like: 1 234 567 89 01
         if not pnumber.replace(' ', '').isdigit():
-            print('It seems that "{}" is not number? Try again.'.format(pnumber))
+            print('It seems that "{}" is not number. Try again.'.format(pnumber))
             continue
         else:
             break
@@ -46,22 +36,17 @@ def pbook_delete() -> None:
     """Removes name from phone book.
     :return: None
     """
+    # If phone book is empty - exit
+    if not pbook:
+        print('Phone book is empty')
+        return
+
     print('Delete entry')
     # Print names in phone book
     pbook_print()
 
     name = pbook_ask_name()
-    """
-    # Checking whether the name string contains only alphabetic characters
-    while True:
-        name = str(input('Enter name to delete: '))
-        # Remove all spaces
-        if not name.replace(' ', '').isalpha():
-            print('This "{}" is not a name? Try again.'.format(name))
-            continue
-        else:
-            break
-    """
+
     # Check key presence in pbook
     if name not in pbook.keys():
         # If there is not such name, then print error
@@ -132,6 +117,9 @@ menu[3] = pbook_delete
 
 
 def pbook_process() -> None:
+    """Function that handles logic of the phone book.
+    :return: None
+    """
     print('Homework 2.1 Phone Book')
 
     menu_print = ['Choose menu', '1. Add', '2. Search', '3. Delete', '4. Exit']
