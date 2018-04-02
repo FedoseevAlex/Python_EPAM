@@ -30,7 +30,7 @@ def select(*field_name: str) -> None:
 
 def field_filter(field_name: str, *collection: list) -> None:
     """Specify field name and possible values to sort data
-    :param field_name: name of field to be filtrated
+    :param field_name: name of field нto be filtrated
     :type field_name: str
     :param collection: possible field values
     :type collection: list
@@ -38,7 +38,10 @@ def field_filter(field_name: str, *collection: list) -> None:
     """
     # We'll modify global variable
     global filter_res
-    filter_res.update({field_name: list(*collection)})
+    if field_name in filter_res.keys():
+        filter_res[field_name].extend(*collection)
+    else:
+        filter_res[field_name] = list(*collection)
 
 
 def query(collection: list, *args) -> list:
@@ -52,7 +55,6 @@ def query(collection: list, *args) -> list:
     global select_res, filter_res
     to_return = []
     # If select was not called then empty list
-    #if select_res:
     if args:
         for item in collection:
             # Compare each field that are to be filtered
@@ -79,8 +81,8 @@ field_filter('sport', ['Баскетбол', 'Волейбол']),
 field_filter('gender', ['Мужской']))
 
 print(result) # [{'name': 'Сэм', 'gender': 'Мужской', 'sport': 'Баскетбол'}, ​​​​]
-
 """
+
 result = query(
 friends,
 select('name', 'gender', 'sport'))
@@ -115,9 +117,9 @@ print(result)
 result = query(
 friends,
 select('name', 'sport'),
-field_filter('name', ['Джон', 'Рональд']),
-field_filter('sport', ['Борьба']),
-select('email'))
+field_filter('name', ['Джон']),
+field_filter('name', ['Сэм'])
+)
 
 print(result)
 """
