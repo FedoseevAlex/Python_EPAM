@@ -5,9 +5,17 @@ import functools
 
 def validate(lower_bound: int=0, upper_bound: int=255):
     """
-    Returns decorator that checks if input args is between lower_bound and upper_bound
-    :param lower_bound:
-    :param upper_bound:
+    Decorator that checks if input args is between lower_bound and upper_bound and there are 3 arguments
+    @validate(lower_bound=0, upper_bound=255)
+    def foo(*args, **kwargs):
+        ....
+
+    >>>foo(1, 2, 3) - valid input
+    >>>foo(1000, 2, 3) - invalid input
+    :param lower_bound: min limit of input value
+    :type lower_bound: int
+    :param upper_bound: max limit of input value
+    :type upper_bound: int
     :return: function (decorator with validate option)
     """
     def wrapper_validate(func):
