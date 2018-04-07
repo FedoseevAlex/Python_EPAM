@@ -5,16 +5,10 @@ friends = [
     {'name': 'Джон', 'gender': 'Мужской', 'sport': 'Борьба', 'email': 'email1@email2.com'},
     {'name': 'Рональд', 'gender': 'Мужской', 'sport': 'Футбол', 'email': 'email1@email3.com'},
     {'name': 'Джилл', 'gender': 'Женский', 'sport': 'Теннис', 'email': 'email1@email4.com'},
-    {'name': 'Софи', 'gender': 'Женский', 'sport': 'Шахматы', 'email': 'email2@email4.com'},
-    {'name': 'Айзек', 'gender': 'Мужской', 'sport': 'Шахматы', 'email': 'email3@email4.com'},
-    {'name': 'Брайан', 'gender': 'Мужской', 'sport': 'Теннис', 'email': 'email4@email4.com'},
-    {'name': 'Марта', 'gender': 'Женский', 'sport': 'Волейбол', 'email': 'email5@email4.com'},
 ]
 
-# List of fields to show in output
-select_res = []
-# Dict key - fields: value - list of fields values to filter
-filter_res = {}
+# A dict that acts as mask for data
+res_fields = {}
 
 
 def select(*field_name: str) -> None:
@@ -23,25 +17,25 @@ def select(*field_name: str) -> None:
     :type field_name: str
     :return: None
     """
-    global select_res
-    # Add fields to be shown
-    select_res.extend([name for name in field_name if name not in select_res])
+    global res_fields
+    # Add fields to resulting data
+    res_fields.update({name: [] for name in field_name if name not in res_fields})
 
 
 def field_filter(field_name: str, *collection: list) -> None:
     """Specify field name and possible values to sort data
-    :param field_name: name of field нto be filtrated
+    :param field_name: name of field to be filtrated
     :type field_name: str
     :param collection: possible field values
     :type collection: list
     :return: None
     """
     # We'll modify global variable
-    global filter_res
-    if field_name in filter_res.keys():
-        filter_res[field_name].extend(*collection)
-    else:
-        filter_res[field_name] = list(*collection)
+    global res_fields
+    #if field_name in res_fields.keys():
+    #res_fields[field_name].extend(*collection)
+    res_fields[field_name] = []
+    res_fields[field_name].extend(*collection)
 
 
 def query(collection: list, *args) -> list:
@@ -52,27 +46,23 @@ def query(collection: list, *args) -> list:
     :param args: add select and filters here
     :return: list with requested data
     """
-    global select_res, filter_res
     to_return = []
-    # If select was not called then empty list
-    if args:
+    # If select and filter was not called then empty list
+    if res_fields:
         for item in collection:
-            # Compare each field that are to be filtered
-            for field in filter_res:
-                if field in item.keys() and item[field] in filter_res[field]:
+            # Compare each field in mask
+            for field in res_fields:
+                # If fields match and value list is empty  -> True
+                # If fields match and value in data is in mask value list -> True
+                # If fields match and value in data is not in mask value list -> False
+                # If fields not match -> False
+                if field in item.keys() and (item[field] in res_fields[field] or not res_fields[field]):
                     continue
                 else:
                     break
             else:
-                # Return only selected fields
-                to_return.append({key: value for key, value in item.items() if key in select_res})
-    # Clean select and filter options before return
-    select_res = []
-    filter_res = {}
+                to_return.append({key: value for key, value in item.items() if key in res_fields.keys()})
     return to_return
-
-
-# Tests
 
 """
 result = query(
@@ -82,45 +72,44 @@ field_filter('sport', ['Баскетбол', 'Волейбол']),
 field_filter('gender', ['Мужской']))
 
 print(result) # [{'name': 'Сэм', 'gender': 'Мужской', 'sport': 'Баскетбол'}, ​​​​]
+res_fields = {}
 
 result = query(
 friends,
-select('name', 'gender', 'sport'))
-
+select('name', 'gender', 'sport'),
+field_filter('gender', ['Мужской']))
 
 print(result)
-
+res_fields = {}
 
 result = query(
 friends,
 select('name', 'sport'),
-field_filter('gender', ['Женский']))
+field_filter('gender', ['Мужской']))
 
 print(result)
-
+res_fields = {}
 
 result = query(
 friends,
 field_filter('gender', ['Мужской']))
 
 print(result)
-
-
+res_fields = {}
+"""
 result = query(
 friends,
 select('name', 'email'),
-field_filter('gender', ['Мужской', 'Женский', 'Нет']))
+field_filter('gender', ['Мужской']))
 
 print(result)
-
-
+res_fields = {}
+"""
 result = query(
 friends,
-select('name', 'sport'),
-select('email'),
-field_filter('name', ['Джон']),
-field_filter('name', ['Сэм'])
-)
+field_filter('name', ['Джон', 'Рональд']))
 
 print(result)
+res_fields = {}
 """
+"""Если в фильтре есть поле, которого нет в селект, то все ок просто фильтр добавляет его"""
