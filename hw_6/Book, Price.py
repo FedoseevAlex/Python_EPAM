@@ -1,3 +1,5 @@
+#!/usr/bin/env/ python3.6
+# Task #L6.1 Class Book, descriptor price
 class Price:
     """
     Price descriptor

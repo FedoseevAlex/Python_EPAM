@@ -1,3 +1,6 @@
+#!/usr/bin/env/ python3.6
+# Task #L6.2 Abstract class vehicle
+
 import abc
 
 class Vehicle(abc.ABC):
