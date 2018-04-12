@@ -30,24 +30,37 @@ class Vehicle(abc.ABC):
 
 
 class Car(Vehicle):
+    """
+    Car class. Wroom wroom m...er!
+    """
     wheels_number = 4
 
     def vehicle_type(self):
         return ' '.join(['Car', self.trademark, self.model])
 
 class Motorcycle(Vehicle):
+    """
+    Motorcycle class.
+    Four wheels carry the body, and two wheels - the soul!
+    """
     wheels_number = 2
 
     def vehicle_type(self):
         return ' '.join(['Motorcycle', self.trademark, self.model])
 
 class Truck(Vehicle):
+    """
+    Heavy Truck. So brutal. Much wow.
+    """
     wheels_number = 6
 
     def vehicle_type(self):
         return ' '.join(['Truck', self.trademark, self.model])
 
 class Bus(Vehicle):
+    """
+    Bus it's the thing that get you to your school.
+    """
     wheels_number = 4
 
     def vehicle_type(self):
