@@ -13,10 +13,7 @@ class PositiveDecimal:
         if instance is None:
             return self
         else:
-            try:
-                return instance.__dict__[self.label]
-            except KeyError:
-                return self
+            return instance.__dict__[self.label]
 
     def __set__(self, instance, value):
         try:
@@ -30,7 +27,7 @@ class PositiveDecimal:
 
 
 class Currency(abc.ABC):
-    course = PositiveDecimal()
+    course = None
     symbol = '¤'
 
     def __init__(self, amount):
@@ -54,30 +51,80 @@ class Currency(abc.ABC):
         else:
             self._amount = to_set
 
+    def __eq__(self, other):
+        return self.amount / self.course == other.amount / other.course
+
+    def __lt__(self, other):
+        return self.amount / self.course < other.amount / other.course
+
+    def __le__(self, other):
+        return self.amount / self.course <= other.amount / other.course
+
+    def __gt__(self, other):
+        return self.amount / self.course > other.amount / other.course
+
+    def __ge__(self, other):
+        return self.amount / self.course >= other.amount / other.course
+
+    def __ne__(self, other):
+        return self.amount / self.course != other.amount / other.course
+
+    def __mul__(self, other):
+        if isinstance(other, (int, float, decimal.Decimal)):
+            return self.amount * decimal.Decimal(str(other))
+        else:
+            raise ArithmeticError('Only {} and int, float or decimal.Decimal multiplication is allowed.')
+
+    def __rmul__(self, other):
+        if isinstance(other, (int, float, decimal.Decimal)):
+            return self.amount * decimal.Decimal(str(other))
+        else:
+            raise ArithmeticError('Only {} and int, float or decimal.Decimal multiplication is allowed.')
+
+    def __truediv__(self, other):
+        if isinstance(other, (int, float, decimal.Decimal)):
+            return self.amount / decimal.Decimal(str(other))
+        else:
+            raise ArithmeticError('Only {} and int, float or decimal.Decimal division is allowed.')
+
+    def __rtruediv__(self, other):
+        if isinstance(other, (int, float, decimal.Decimal)):
+            return  decimal.Decimal(str(other)) / self.amount
+        else:
+            raise ArithmeticError('Only {} and int, float or decimal.Decimal division is allowed.')
+
     def to(self, other):
         return '{} {}'.format(self.amount * other.course / self.course, other.symbol)
 
 
 
 class Dollar(Currency):
+    course = PositiveDecimal()
     symbol = '$'
     pass
 
+
 class Euro(Currency):
+    course = PositiveDecimal()
     symbol = '€'
     pass
 
+
 class Ruble(Currency):
+    course = PositiveDecimal()
     symbol = 'R'
     pass
 
+
 d = Dollar(234)
 r = Ruble(240)
+e = Euro(10)
+"""
 print(d)
 print(d.amount)
 print(d.course)
-Dollar.course = 1
-Ruble.course = -60
-Euro.course = -9
-r.to(Dollar)
-print(r.to(Euro))
+"""
+d.course = 1
+r.course = 60
+e.course = 0.81
+
