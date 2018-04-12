@@ -2,13 +2,18 @@
 # HW #L6.2 Descriptor prop aka Property
 
 
-class prop:
+class Prop:
+    """
+    Property
+    """
     def __init__(self, getter=None, setter=None, deleter=None):
         self.getter = getter
         self.setter = setter
         self.deleter = deleter
 
     def __get__(self, instance, owner):
+        if instance == None:
+            return self
         print('Prop getter')
         return self.getter(instance)
 
@@ -21,19 +26,40 @@ class prop:
         return self.deleter(instance)
 
     def get_func(self, getter):
+        """
+        Method to assign getter function.
+        :param getter: function that gets attribute value.
+        :type getter: function
+        :return: result of getter function work
+        """
         return self.__class__(getter, self.setter, self.deleter)
 
     def set_func(self, setter):
+        """
+        Method to assign setter function.
+        :param setter: function that sets attribute value.
+        :type setter: function
+        :return: result of setter function work
+        """
         return self.__class__(self.getter, setter, self.deleter)
 
     def del_func(self, deleter):
+        """
+        Method to assign deleter function.
+        :param deleter: function that deletes attribute value.
+        :type deleter: function
+        :return: result of deleter function work
+        """
         return self.__class__(self.getter, self.setter, deleter)
 
 
 class Something:
+    """
+    Test class for prop
+    """
     def __init__(self, x):
         self.x = x
-    @prop
+    @Prop
     def attr(self):
         return self.x ** 2
 
