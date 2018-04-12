@@ -6,6 +6,9 @@ import decimal
 
 
 class PositiveDecimal:
+    """
+    Only positive values to store money values.
+    """
     def __init__(self):
         self.label = '<Course at {}>'.format(id(self))
 
@@ -27,6 +30,11 @@ class PositiveDecimal:
 
 
 class Currency(abc.ABC):
+    """
+    This abstract class representing currencies.
+    >>> Dollar(Currency):
+    ... pass
+    """
     course = None
     symbol = '¤'
 
@@ -94,29 +102,44 @@ class Currency(abc.ABC):
             raise ArithmeticError('Only {} and int, float or decimal.Decimal division is allowed.')
 
     def to(self, other):
+        """
+        Currency conversion method.
+        :param other: currency class you want to convert to
+        :type other: currency class
+        :return: value in converted currency
+        """
         return '{} {}'.format(self.amount * other.course / self.course, other.symbol)
 
 
 
 class Dollar(Currency):
-    course = PositiveDecimal()
+    """
+    Dollar class. 99% freedom
+    """
+    course = decimal.Decimal(str(1))
     symbol = '$'
     pass
 
 
 class Euro(Currency):
-    course = PositiveDecimal()
+    """
+    Euro class.
+    """
+    course = decimal.Decimal(str(0.81))
     symbol = '€'
     pass
 
 
 class Ruble(Currency):
-    course = PositiveDecimal()
+    """
+    Ruble class, comrade!
+    """
+    course = decimal.Decimal(str(60))
     symbol = 'R'
     pass
 
 
-d = Dollar(234)
+d = Dollar(10)
 r = Ruble(240)
 e = Euro(10)
 """
@@ -128,3 +151,4 @@ d.course = 1
 r.course = 60
 e.course = 0.81
 
+print(d.to(Ruble))
