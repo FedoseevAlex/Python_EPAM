@@ -26,7 +26,7 @@ class LogIt:
             foo()
         File "SomeCode.py", line XX, in foo
             raise EX
-    In case of no errors file 'log.tst' won't be created.
+    In case of no errors file 'log.txt' won't be created.
     :param logfile: Name of file to store error data.
     :type logfile: str
     """
