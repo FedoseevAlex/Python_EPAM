@@ -200,7 +200,7 @@ class Triangle:
 
         Example:
         >>> Triangle(Point(0, 0), Point(0, 3), Point(4, 4))
-        ((1.0, 1.0), (2.0, 3.0), (4.0, 5.0))
+        ((0.0, 0.0), (0.0, 3.0), (4.0, 4.0))
         >>> Triangle(Point(1, 1), Point(1, 3), Point(1, 5))
         Traceback (most recent call last):
         ...
@@ -213,7 +213,7 @@ class Triangle:
         :param c:
         :type c:
         """
-        if not any((a, b, c)) and not Point.on_one_line(a, b, c):
+        if None not in (a, b, c) and not Point.on_one_line(a, b, c):
             self._a = a
             self._b = b
             self._c = c
@@ -293,7 +293,5 @@ class Triangle:
 
 
 if __name__ == '__main__':
-    t = Triangle(Point(0, 0), Point(0, 8), Point(4, 5))
-    t.area()
     import doctest
-    #doctest.testmod()
+    doctest.testmod()
