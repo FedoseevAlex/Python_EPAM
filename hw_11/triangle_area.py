@@ -13,6 +13,11 @@ class Triangle:
     Represents triangle, defined by three points.
     """
     def __init__(self, *args):
+        """
+        This method takes exactly three points to initialise a triangle.
+        :param args: Tuples that define
+        :type args:
+        """
         if self.__points_checker(*args):
             self.points = args
 
@@ -60,6 +65,6 @@ class Triangle:
         return math.sqrt(p * (p - a) * (p - b) * (p - c))
 
 if __name__ == '__main__':
-    t = Triangle((1, 3), (3, 2), (1, 8))
+    t = Triangle((0, 3), (3, 2), (1, 8))
     print(t.area())
     t._Triangle__on_one_line(*((1, 3), (1, 2), (1, 8)))
