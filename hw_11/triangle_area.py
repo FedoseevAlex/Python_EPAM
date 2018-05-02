@@ -65,6 +65,5 @@ class Triangle:
         return math.sqrt(p * (p - a) * (p - b) * (p - c))
 
 if __name__ == '__main__':
-    t = Triangle((0, 3), (3, 2), (1, 8))
-    print(t.area())
-    t._Triangle__on_one_line(*((1, 3), (1, 2), (1, 8)))
+    import doctest
+    doctest.testmod()
