@@ -180,7 +180,7 @@ class Triangle:
                        /  \
                     c /____\ b
     Example:
-    >>> t = t = Triangle(Point(0, 0), Point(8, 0), Point(4, 5))
+    >>> t = Triangle(Point(0, 0), Point(8, 0), Point(4, 5))
     >>> t
     ((0.0, 0.0), (8.0, 0.0), (4.0, 5.0))
     >>> t.area()
@@ -212,7 +212,7 @@ class Triangle:
         :param c:
         :type c:
         """
-        if not any(point == None for point in (a, b, c)) and not Point.on_one_line(a, b, c):
+        if not any(point for point in (a, b, c)) and not Point.on_one_line(a, b, c):
             self._a = a
             self._b = b
             self._c = c
@@ -290,7 +290,7 @@ class Triangle:
         c_edge = self._c.distance(self._a)
         return all([a_edge == b_edge, b_edge == c_edge, c_edge == a_edge])
 
+
 if __name__ == '__main__':
     import doctest
     doctest.testmod()
-
