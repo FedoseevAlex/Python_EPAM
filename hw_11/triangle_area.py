@@ -206,12 +206,12 @@ class Triangle:
         ...
         ValueError: Given points belong to one line and can not define triangle.
 
-        :param a:
-        :type a:
-        :param b:
-        :type b:
-        :param c:
-        :type c:
+        :param a: A point in ABC triangle
+        :type a: Point object
+        :param b: B point in ABC triangle
+        :type b: Point object
+        :param c: C point in ABC triangle
+        :type c: Point object
         """
         if None not in (a, b, c) and not Point.on_one_line(a, b, c):
             self._a = a

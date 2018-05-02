@@ -182,7 +182,72 @@ class ClassPointTest(unittest.TestCase):
             self.assertEqual(err.args[0], "Given points belong to one line and can not define triangle.",
                              "Triangle(Point(1, 1), Point(1, 3), Point(1, 5)) failed, no ValueError was raised.")
 
+    def test_triangle_negative_init_wrong_argument_type(self):
+        """Negative test of Triangle.__init__ method. Wrong type of arguments."""
+        with self.assertRaises(ValueError) as err:
+            Triangle('foo', Point(1, 3), 'bar')
+            self.assertEqual(err.args[0], "Given points belong to one line and can not define triangle.",
+                             "Triangle('foo', Point(1, 3), 'bar') failed, no ValueError was raised.")
 
+        with self.assertRaises(ValueError) as err:
+            Triangle(42, Point(1, 3), 21)
+            self.assertEqual(err.args[0], "Given points belong to one line and can not define triangle.",
+                             "Triangle(42, Point(1, 3), 21) failed, no ValueError was raised.")
+
+
+    def test_triangle_positive_area(self):
+        """Positive test of Triangle.area method."""
+        t = Triangle(Point(0, 3.1415), Point(2.7, 3), Point(3 ** 0.5, 6.023))
+        self.assertEqual(t.area(1), 4.0,
+                         "Test of Triangle(Point(0, 3.1415), Point(2.7, 3), Point(3 ** 0.5, 6.023)).area(1),\
+                          returned value != 4.0.")
+        self.assertEqual(t.area(), 4.013,
+                         "Test of Triangle(Point(0, 3.1415), Point(2.7, 3), Point(3 ** 0.5, 6.023)).area(1) failed,\
+                          returned value != 4.013.")
+        self.assertEqual(t.area(6), 4.012568,
+                         "Test of Triangle(Point(0, 3.1415), Point(2.7, 3), Point(3 ** 0.5, 6.023)).area(6) failed,\
+                          returned value != 4.012568.")
+
+    def test_triangle_negative_area_negative_mantissa(self):
+        """Negative test of Triangle.area method. Give -1 as mantissa value."""
+        t = Triangle(Point(0, 3.1415), Point(2.7, 3), Point(3 ** 0.5, 6.023))
+
+        with self.assertRaises(ValueError) as err:
+            t.area(-1)
+            self.assertEqual(err.args[0], "Negative number for mantissa is not allowed.",
+                             "Triangle(Point(0, 3.1415), Point(2.7, 3), Point(3 ** 0.5, 6.023)).area(-1) failed,\
+                              no ValueError was raised.")
+
+    def test_triangle_positive_is_isosceles_property(self):
+        """Positive test of Triangle.is_isosceles property."""
+        a = Point(-2, 0)
+        b = Point(2, 0)
+        c = Point(0, 4)
+        t = Triangle(a, b, c)
+        self.assertEqual(t.is_isosceles, True,
+                         "Test of Triangle(Point(-2, 0), Point(2, 0), Point(0, 4)) failed, returned value != True.")
+        d = Point(-2, 45)
+        e = Point(2, 0)
+        f = Point(0, 4)
+        g = Triangle(d, e, f)
+        self.assertEqual(g.is_isosceles, False,
+                         "Test of Triangle(Point(-2, 45), Point(2, 0), Point(0, 4)) failed, returned value != False.")
+
+    def test_triangle_positive_is_equilateral_property(self):
+        a = Point(-9, 10)
+        b = Point(-1, 4)
+        c = Point(3 * 3 ** 0.5 - 5, 4 * 3 ** 0.5 + 7)
+        t = Triangle(a, b, c)
+        self.assertEqual(t.is_equilateral, True,
+                         "Test of Triangle(Point(-9, 10), Point(-1, 4), Point(3 * 3 ** 0.5 - 5, 4 * 3 ** 0.5 + 7))\
+                          failed, returned value != True.")
+        a = Point(-9, 21)
+        b = Point(-1, 4)
+        c = Point(3 * 3 ** 0.5 - 5, 4 * 3 ** 0.5 + 7)
+        t = Triangle(a, b, c)
+        self.assertEqual(t.is_equilateral, False,
+                         "Test of Triangle(Point(-9, 21), Point(-1, 4), Point(3 * 3 ** 0.5 - 5, 4 * 3 ** 0.5 + 7))\
+                          failed, returned value != False.")
 
 if __name__ == '__main__':
     unittest.main()
