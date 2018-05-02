@@ -180,12 +180,15 @@ class Triangle:
                        /  \
                     c /____\ b
     Example:
-    >>> t = Triangle(Point(1, 1), Point(2, 3), Point(4, 5))
+    >>> t = t = Triangle(Point(0, 0), Point(8, 0), Point(4, 5))
     >>> t
-    ((1.0, 1.0), (2.0, 3.0), (4.0, 5.0))
+    ((0.0, 0.0), (8.0, 0.0), (4.0, 5.0))
     >>> t.area()
-    1.0
-    >>>
+    20.0
+    >>> t.is_equilateral
+    False
+    >>> t.is_isosceles
+    True
 
     """
 
@@ -221,11 +224,29 @@ class Triangle:
 
     def area(self, mantissa=3):
         """
-        Method to calculate area of triangle.
+        Method to calculate area of triangle. Calculated value is rounded according to mantissa parameter.
+        Mantisssa define how much digits after decimal point to be left.
+        By default mantissa=3. If more accurate value is necessary increase mantissa.
+        If mantissa less than zero than function return 0.0
+        Example:
+        >>> t = Triangle(Point(0, 3.1415), Point(2.7, 3), Point(3 ** 0.5, 6.023))
+        >>> t.area(1)
+        4.0
+        >>> t.area()
+        4.013
+        >>> t.area(6)
+        4.012568
+        >>> t.area(-1)
+        Traceback (most recent call last):
+        ...
+        ValueError: Negative number for mantissa is not allowed.
+
         :param mantissa: Amount of numbers after decimal point.
         :type mantissa: int
         :return:
         """
+        if mantissa < 0:
+            raise ValueError('Negative number for mantissa is not allowed.')
         a_edge = self._a.distance(self._b)
         b_edge = self._b.distance(self._c)
         c_edge = self._c.distance(self._a)
@@ -235,6 +256,8 @@ class Triangle:
     @property
     def is_isosceles(self):
         """
+        Checks whether triangle is isosceles.
+        Example:
         >>> a = Point(-2, 0)
         >>> b = Point(2, 0)
         >>> c = Point(0, 4)
@@ -242,7 +265,7 @@ class Triangle:
         >>> t.is_isosceles
         True
 
-        :return:
+        :return: True if triangle have at least two equal edges. False otherwise.
         """
         a_edge = self._a.distance(self._b)
         b_edge = self._b.distance(self._c)
@@ -250,9 +273,9 @@ class Triangle:
         return any([a_edge == b_edge, b_edge == c_edge, c_edge == a_edge])
 
     @property
-    def is_equilateral(self):
+    def is_equilateral(self) -> bool:
         """
-
+        Checks if triangle is equilateral.
         >>> a = Point(-9, 10)
         >>> b = Point(-1, 4)
         >>> c = Point(3 * 3 ** 0.5 - 5, 4 * 3 ** 0.5 + 7)
@@ -260,7 +283,7 @@ class Triangle:
         >>> t.is_equilateral
         True
 
-        :return:
+        :return: True if edges of triangle are equal. False otherwise.
         """
         a_edge = self._a.distance(self._b)
         b_edge = self._b.distance(self._c)
@@ -268,8 +291,6 @@ class Triangle:
         return all([a_edge == b_edge, b_edge == c_edge, c_edge == a_edge])
 
 if __name__ == '__main__':
-
-
     import doctest
     doctest.testmod()
 
