@@ -1,8 +1,9 @@
 import unittest
-from triangle_area import Point, Triangle
+from Triangle import Point, Triangle
 
-class ClassPointTest(unittest.TestCase):
-    """Test case for class Point in triangle_area.py."""
+
+class TestPoint(unittest.TestCase):
+    """Test case for class Point in Triangle.py."""
 
     def test_point_positive_init_no_arguments(self):
         """Positive test of __init__ function without arguments."""
@@ -80,15 +81,21 @@ class ClassPointTest(unittest.TestCase):
     def test_point_positive_repr(self):
         """Positive test of __repr__ method."""
         p = Point(x=3, y=5)
-        self.assertEqual(p.__repr__(), '(3.0, 5.0)',
+        self.assertTupleEqual(p.__repr__(), (3.0, 5.0),
                          'Test of Point(x=3, y=5).__repr__() failed. Returned value != (3.0, 5.0)')
+
+    def test_point_positive_str(self):
+        """Positive test of __repr__ method."""
+        p = Point(x=3, y=5)
+        self.assertEqual(p.__str__(), '(3.0, 5.0)',
+                              'Test of Point(x=3, y=5).__repr__() failed. Returned value != (3.0, 5.0)')
 
     def test_point_positive_add(self):
         """Positive test of __add__ method."""
         p1 = Point(x=3, y=5)
         p2 = Point(5, 3)
         p = p1 + p2
-        self.assertEqual(p.__repr__(), '(8.0, 8.0)',
+        self.assertEqual(str(p), '(8.0, 8.0)',
                          'Test of Point(x=3, y=5) + Point(5, 3) failed. Returned value != (8.0, 8.0)')
 
     def test_point_negative_x_and_y_setting_deleting(self):
@@ -136,7 +143,7 @@ class ClassPointTest(unittest.TestCase):
         with self.assertRaises(ValueError) as err:
             Point(1, 7).distance('foo')
             self.assertEqual(err.args[0], "Wrong type of argument. Distance is calculated between two Point objects.",
-                         "Test of Point(1, 7).distance('foo') failed, no ValueError was raised.")
+                             "Test of Point(1, 7).distance('foo') failed, no ValueError was raised.")
 
     def test_point_positive_on_one_line(self):
         """Negative test of Point.on_one_line method."""
@@ -144,17 +151,16 @@ class ClassPointTest(unittest.TestCase):
         b = Point(34, 0)
         c = Point(42, 0)
 
-        self.assertEqual(Point.on_one_line(a, b, c), True,
-                         "Test of Point.on_one_line(a, b, c) failed, returned value != True.")
+        self.assertTrue(Point.on_one_line(a, b, c),
+                        "Test of Point.on_one_line(a, b, c) failed, returned value != True.")
         d = Point(1, 2)
         e = Point(34, 43)
         f = Point(42, 54)
 
-        self.assertEqual(Point.on_one_line(d, e, f), False,
+        self.assertFalse(Point.on_one_line(d, e, f),
                          "Test of Point.on_one_line(d, e, f) failed, returned value != False.")
 
-        self.assertEqual(Point.on_one_line(a), True,
-                         "Test of Point.on_one_line(a) failed, returned value != True.")
+        self.assertTrue(Point.on_one_line(a), "Test of Point.on_one_line(a) failed, returned value != True.")
 
     def test_point_negative_on_one_line(self):
         """Negative test of Point.on_one_line method."""
@@ -168,10 +174,13 @@ class ClassPointTest(unittest.TestCase):
                              "Test of Point.on_one_line('foo', a, b, c) failed, no ValueError was raised.")
 
 
+class TestTriangle(unittest.TestCase):
+    """Test case for class Triangle in Triangle.py."""
+
     def test_triangle_positive_init(self):
         """Positive test of Triangle.__init__ method."""
         t = Triangle(Point(1, 1), Point(2, 3), Point(4, 5))
-        self.assertEqual(t.__repr__(), '((1.0, 1.0), (2.0, 3.0), (4.0, 5.0))',
+        self.assertEqual(str(t), '((1.0, 1.0), (2.0, 3.0), (4.0, 5.0))',
                          "Test of Triangle(Point(0, 0), Point(8, 0), Point(4, 5)) failed,\
                           returned value != ((1.0, 1.0), (2.0, 3.0), (4.0, 5.0)).")
 
@@ -193,7 +202,6 @@ class ClassPointTest(unittest.TestCase):
             Triangle(42, Point(1, 3), 21)
             self.assertEqual(err.args[0], "Given points belong to one line and can not define triangle.",
                              "Triangle(42, Point(1, 3), 21) failed, no ValueError was raised.")
-
 
     def test_triangle_positive_area(self):
         """Positive test of Triangle.area method."""
@@ -224,30 +232,32 @@ class ClassPointTest(unittest.TestCase):
         b = Point(2, 0)
         c = Point(0, 4)
         t = Triangle(a, b, c)
-        self.assertEqual(t.is_isosceles, True,
+        self.assertTrue(t.is_isosceles,
                          "Test of Triangle(Point(-2, 0), Point(2, 0), Point(0, 4)) failed, returned value != True.")
         d = Point(-2, 45)
         e = Point(2, 0)
         f = Point(0, 4)
         g = Triangle(d, e, f)
-        self.assertEqual(g.is_isosceles, False,
+        self.assertFalse(g.is_isosceles,
                          "Test of Triangle(Point(-2, 45), Point(2, 0), Point(0, 4)) failed, returned value != False.")
 
     def test_triangle_positive_is_equilateral_property(self):
+        """Positive test of Triangle.is_equilateral property."""
         a = Point(-9, 10)
         b = Point(-1, 4)
         c = Point(3 * 3 ** 0.5 - 5, 4 * 3 ** 0.5 + 7)
         t = Triangle(a, b, c)
-        self.assertEqual(t.is_equilateral, True,
+        self.assertTrue(t.is_equilateral,
                          "Test of Triangle(Point(-9, 10), Point(-1, 4), Point(3 * 3 ** 0.5 - 5, 4 * 3 ** 0.5 + 7))\
                           failed, returned value != True.")
         a = Point(-9, 21)
         b = Point(-1, 4)
         c = Point(3 * 3 ** 0.5 - 5, 4 * 3 ** 0.5 + 7)
         t = Triangle(a, b, c)
-        self.assertEqual(t.is_equilateral, False,
+        self.assertFalse(t.is_equilateral,
                          "Test of Triangle(Point(-9, 21), Point(-1, 4), Point(3 * 3 ** 0.5 - 5, 4 * 3 ** 0.5 + 7))\
                           failed, returned value != False.")
+
 
 if __name__ == '__main__':
     unittest.main()

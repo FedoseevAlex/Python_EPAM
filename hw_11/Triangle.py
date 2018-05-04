@@ -57,8 +57,10 @@ class Point:
         else:
             raise ValueError('Wrong value to define point. Both x and y must be int or float.')
 
-    def __repr__(self):
+    def __str__(self):
         return '({}, {})'.format(self.x, self.y)
+
+    __repr__ = __str__
 
     def __add__(self, other):
         return Point(self.x + other.x, self.y + other.y)
@@ -106,6 +108,29 @@ class Point:
         :return: coordinate of type float
         """
         return self.__y
+
+    @property
+    def coordinates(self) -> tuple:
+        """
+        Property that returns point coordinates as tuple.
+
+        Examples:
+        >>> p = Point()
+        >>> p.coordinates
+        (0.0, 0.0)
+        >>> p.coordinates = 45
+        Traceback (most recent call last):
+        ...
+        AttributeError: can't set attribute
+        >>> del p.coordinates
+        Traceback (most recent call last):
+        ...
+        AttributeError: can't delete attribute
+        >>>
+
+        :return: tuple -- exactly (x, y)
+        """
+        return tuple([self.x, self.y])
 
     def distance(self, other=None) -> float:
         """
@@ -158,6 +183,7 @@ class Point:
         Traceback (most recent call last):
         ...
         ValueError: Some of given arguments is not points.
+        >>>
 
         :param args: Any number of points.
         :type args: Point instances.
@@ -191,6 +217,7 @@ class Triangle:
     False
     >>> t.is_isosceles
     True
+    >>>
     """
 
     def __init__(self, a=None, b=None, c=None):
@@ -205,6 +232,14 @@ class Triangle:
         Traceback (most recent call last):
         ...
         ValueError: Given points belong to one line and can not define triangle.
+        >>> Triangle(Point(1, 1), Point(1, 3))
+        Traceback (most recent call last):
+        ...
+        ValueError: Not enough points to define a triangle.
+        >>> Triangle(Point(4, 1), Point(1, 3), Point(4, 1))
+        Traceback (most recent call last):
+        ...
+        ValueError: Some of given points have same coordinates.
 
         :param a: A point in ABC triangle
         :type a: Point object
@@ -213,15 +248,25 @@ class Triangle:
         :param c: C point in ABC triangle
         :type c: Point object
         """
-        if None not in (a, b, c) and not Point.on_one_line(a, b, c):
+        if None in (a, b, c):
+            raise ValueError('Not enough points to define a triangle.')
+
+        elif len({a.coordinates, b.coordinates, c.coordinates}) != 3:
+            raise ValueError('Some of given points have same coordinates.')
+
+        elif Point.on_one_line(a, b, c):
+            raise ValueError('Given points belong to one line and can not define triangle.')
+
+        else:
+
             self._a = a
             self._b = b
             self._c = c
-        else:
-            raise ValueError('Given points belong to one line and can not define triangle.')
 
-    def __repr__(self):
+    def __str__(self):
         return '({}, {}, {})'.format(self._a, self._b, self._c)
+
+    __repr__ = __str__
 
     def area(self, mantissa=3):
         """
@@ -253,6 +298,26 @@ class Triangle:
         c_edge = self._c.distance(self._a)
         p = (a_edge + b_edge + c_edge) / 2
         return round(math.sqrt(p * (p - a_edge) * (p - b_edge) * (p - c_edge)), mantissa)
+
+    @property
+    def points(self) -> tuple:
+        """
+        This property returns triangle points as tuple of tuples.
+        >>> t = Triangle(Point(0, 3.1415), Point(2.7, 3), Point(2, 6.023))
+        >>> t.points
+        ((0.0, 3.1415), (2.7, 3.0), (2.0, 6.023))
+        >>> t.points = 45
+        Traceback (most recent call last):
+        ...
+        AttributeError: can't set attribute
+        >>> del t.points
+        Traceback (most recent call last):
+        ...
+        AttributeError: can't delete attribute
+
+        :return: tuple -- that contains three tuples with points coordinates.
+        """
+        return tuple([self._a.coordinates, self._b.coordinates, self._c.coordinates])
 
     @property
     def is_isosceles(self):
