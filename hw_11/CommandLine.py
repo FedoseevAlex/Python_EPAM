@@ -10,24 +10,16 @@ from Triangle import Point, Triangle
 import re
 
 
-def get_cmd() -> str:
-    """
-    Function that gets command from user.
-    :return: str -- command from user input
-    """
-    command = input('> ')
-    return command
-
-
 def make_action():
     """
     Gets command from user input and call corresponding handler function.
+    :return None
     """
     triangle = None
     print('Triangle area!')
     print('Type "h" for help.')
     while True:
-        command = get_cmd()
+        command = input('> ')
         if command == 'new':
             triangle = get_triangle()
 
@@ -98,16 +90,7 @@ def get_point() -> Point:
 def get_help():
     """
     Prints help message for user.
-
-    >>> get_help()
-    Help:
-        new -- Command to define triangle from three points.
-        help -- Show help message. Possible alternatives are: '?', 'h'.
-        quit -- Quit and close program. Possible alternatives are: 'q', 'exit'.
-        area -- Calculate and print area of triangle.
-        isosceles -- Print True if given triangle is isosceles, or False if not.
-        equilateral -- Print True if given triangle is equilateral, or False if not.
-    >>>
+    :return None
     """
     help_string = {'new': 'Command to define triangle from three points.',
                    'help': "Show help message. Possible alternatives are: '?', 'h'.",
@@ -116,18 +99,11 @@ def get_help():
                    'isosceles': "Print True if given triangle is isosceles, or False otherwise.",
                    'equilateral': "Print True if given triangle is equilateral, or False if not."}
     print('Help:')
-    print(r"""  This is a triangle:
-        a
-        /\
-       /  \     a, b and c are points
-      /    \    that define a triangle
-     /______\
-    b        c
-    """)
-    print('  Commands:')
     for key, val in help_string.items():
         print('    {} -- {}'.format(key, val))
 
+
 if __name__ == '__main__':
+    get_help()
     import doctest
     doctest.testmod()
