@@ -251,6 +251,9 @@ class Triangle:
         if None in (a, b, c):
             raise ValueError('Not enough points to define a triangle.')
 
+        elif not all(isinstance(point, Point) for point in (a, b, c)):
+            raise TypeError('Wrong type of arguments. All arguments must be Point instances.')
+
         elif len({a.coordinates, b.coordinates, c.coordinates}) != 3:
             raise ValueError('Some of given points have same coordinates.')
 
