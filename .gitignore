@@ -2,3 +2,7 @@
 htmlcov*
 __*
 SuperTool/venv*
+SuperTool/src/supertool*
+SuperTool/log*
+Supertool/src/tests/tmp*  
+
