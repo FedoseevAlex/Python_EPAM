@@ -38,6 +38,7 @@ def forecast(**kwargs):
         print('OpenWeatherMap is currently unavailable. Try again later or contact <fedoseevalex@inbox.ru>.')
         print('Error: {}'.format(weather_req.json()['message']))
         return
+
     print_work(weather_req.json(), kwargs['days'])
 
 
