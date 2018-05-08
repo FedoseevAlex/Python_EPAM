@@ -23,7 +23,7 @@ if __name__ == '__main__':
                         help='Location to get weather forecast for.'
                         'Highly recommended to enter like:street,  city, country')
     parser.add_argument('-d', '--days', type=int, help='Number of days to forecast.',
-                        default=5, choices=list(range(1, 6)))
+                        default=1, choices=list(range(2, 6)))
 
     args = parser.parse_args()
     weather.forecast(**vars(args))
