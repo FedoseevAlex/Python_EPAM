@@ -1,3 +1,17 @@
+"""
+This file contain logic for weather_forecast script.
+Defined functions:
+    forecast(**kwargs) -> None:
+        kwargs -- command line arguments passed by user
+        Make get requests to OpenWeather and Nominatim API using 'requests' module.
+        First: make get request to Nominatim and receive longitude and latitude of requested location.
+        Second: pass geo coordinates to OpenWeather API and receive weather five day forecast for every
+                three hours
+        Third: call print_work to make a fancy output
+
+    print_work(print_work(weather_info, days)) -> None:
+        Gets weather info and number of days to show forecast for and prints it.
+"""
 import requests
 
 # Request parameters
@@ -7,8 +21,18 @@ WEATHER_APPID = '6170e39b3be9832d85279c4719643235'
 
 
 def forecast(**kwargs):
-    # Get city and country from from kwargs
+    """
+    This function handles work with OpenWeather and Nominatim API's.
+    Firstly it send get request with desired location to Nominatim and gets a response in json format.
+    If response is empty then prints that such location not found. Valid response contains longitude
+    and latitude of requested location.
+    These coordinates transferred to OpenWeather as location to get weather for. OpenWeather returns a
+    hourly 5 day forecast.
 
+    :param kwargs: Options got from command line
+    :return: None
+    """
+    # Get city and country from from kwargs
     nominatim_parameters = dict(q=kwargs['location'], format='json', limit=1, dedupe=0)
     try:
         location_req = requests.get(url=NOMINATIM_URL, params=nominatim_parameters)
@@ -43,8 +67,19 @@ def forecast(**kwargs):
 
 
 def print_work(weather_info, days):
+    """
+    This function handle printing in fancy manner.
+
+    :param weather_info: OpenWeather response. Contains forecast for each 3 hours for five days.
+    :param days: Number of days to show forecast for.
+    :return: None
+    """
     print('Weather for {}, {}:'.format(weather_info['city']['name'], weather_info['city']['country']))
     for index, weather in enumerate(weather_info['list']):
+        # As OpenWeather response contains forecast for each 3 hours of five further days
+        # it would be convenient to split forecast by day.
+        # So for 40 given forecasts each 8 of them belong to one day.
+        # And 8 here is to split forecast for each day.
         module, remainder = divmod(index, 8)
         if module >= days:
             break
