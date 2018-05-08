@@ -1,0 +1,30 @@
+#!/usr/bin/env python
+"""
+Weather forecast entry point
+"""
+
+#System
+import argparse
+import logging
+import os
+
+#3-rd party
+
+#Local
+
+from SuperTool import weather
+
+ROOT_LOGGER = logging.getLogger()
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Show a weather forecast for specified location.',
+                                     usage='weather_forecast [options] "desired location"')
+    parser.add_argument('location', type=str,
+                        help='Location to get weather forecast for.'
+                        'Highly recommended to enter like:street,  city, country')
+    parser.add_argument('-d', '--days', type=int, help='Number of days to forecast.',
+                        default=5, choices=list(range(1, 6)))
+
+    args = parser.parse_args()
+    weather.forecast(**vars(args))
+

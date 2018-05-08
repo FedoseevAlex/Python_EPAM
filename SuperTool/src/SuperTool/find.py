@@ -1,6 +1,17 @@
+"""
+This file contains logic for similar_files script.
+Functions:
+    similar(**kwargs) -> dict
+    Find all files and calculate hashes based on file contents. Compose files and hashes into dict and remove
+    unique files.
+    Return dict, where:
+    keys: file hashes, values: paths to similar files
+
+    print_work(duplicates: dict) -> None
+    Prints non unique files by groups that contains of similar files.
+"""
 import os
 from contextlib import closing
-
 
 def similar(**kwargs):
     """
@@ -10,7 +21,7 @@ def similar(**kwargs):
 
     :param kwargs: Command line options got from user as keywords. Contains directory to find and other options.
     :type kwargs: dict
-    :return: None
+    :return: dict -- keys: file hashes, values: paths to similar files
     """
     # Create directory paths generator
     dirpath_generator = os.walk(kwargs['directory'])
@@ -41,7 +52,7 @@ def similar(**kwargs):
             index_files.pop(key)
 
     print_work(index_files)
-
+    return index_files
 
 def print_work(duplicates: dict):
     """
