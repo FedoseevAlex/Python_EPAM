@@ -5,4 +5,6 @@ SuperTool/venv*
 SuperTool/src/supertool*
 SuperTool/log*
 Supertool/src/tests/tmp*  
-
+Downloader/venv*
+Downloader/temp*
+Downloader/pictures.txt
