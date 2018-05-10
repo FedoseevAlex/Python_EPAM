@@ -1,4 +1,4 @@
-#!/usr/bin/env/ python3.6
+#!/usr/bin/env python3.6
 """
 Image downloader module. Contains all required logic to download images from file with url's and resize them.
 """
@@ -108,27 +108,12 @@ def download():
     # Create thread pool and wait downloading to finish
     pool = ThreadPool(args['threads'])
 
-    images = pool.map(thread_work, enumerate(url_list))
+    thread_arguments = [(index, url, args['size'], args['dir']) for index, url in enumerate(url_list)]
+
+    pool.map(thread_work, thread_arguments)
 
     pool.close()
     pool.join()
-
-    # Create image error
-    # images[3] = (3, b'asda sda')
-
-    # Resize and save images
-    for index, image in images:
-        if image is None:
-            continue
-        img_path = os.path.join(args['dir'], str(index).zfill(5))
-        try:
-            img = Image.open(BytesIO(image))
-        except (TypeError, OSError):
-            print('Error occurred during {} image resize. File not created!'.format(index))
-            REPORT['process_errors'] += 1
-            continue
-        img.thumbnail(args['size'])
-        img.save(img_path, "JPEG")
 
     print_report(time() - time_start)
 
@@ -152,17 +137,18 @@ def get_lines(file: str) -> list:
     return lines
 
 
-def thread_work(index_url: tuple) -> tuple:
+def thread_work(params: tuple) -> bool:
     """
     This function handle work sequence for one thread.
     Work sequence contains downloading files from internet and add information to report.
 
-    :param index_url: contains image index according to number line in file and url.
-    :type index_url: tuple -- (index: int, url: str)
-    :return: tuple -- (index: int, img: image binary data)
+    :param params: contains image index according to number line in file and url.
+    :type params: tuple -- (index: int, url: str)
+    :return: bool -- True if no errors occured, False otherwise.
     """
-    index, url = index_url
+    index, url, size, dir = params
     img = None
+    # Download image
     try:
         # Added header to avoid http 403 error. Servers so clever now that they block requests from programs.
         response = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'})
@@ -170,18 +156,29 @@ def thread_work(index_url: tuple) -> tuple:
         REP_LOCK.acquire()
         REPORT['request_errors'] += 1
         REP_LOCK.release()
-        print('Error during downloading in thread {}.'.format(index))
-    else:
-        img = response.content
-        bytes_load = len(img)
-        REP_LOCK.acquire()
-        REPORT['downloaded'] += 1
-        REPORT['bytes'] += bytes_load
-        REP_LOCK.release()
-        response.close()
-        print('Thread {} finished downloading. Size: {} bytes'.format(index, bytes_load))
-    finally:
-        return (index, img)
+        print('Error during downloading image {}.'.format(index))
+        return False
+
+    img = response.content
+    bytes_load = len(img)
+    REP_LOCK.acquire()
+    REPORT['downloaded'] += 1
+    REPORT['bytes'] += bytes_load
+    REP_LOCK.release()
+    response.close()
+    print('Image {} finished downloading. Size: {} bytes'.format(index, bytes_load))
+
+    img_path = os.path.join(dir, str(index).zfill(5))
+    try:
+        image = Image.open(BytesIO(img))
+    except (TypeError, OSError):
+        print('Error occurred during {} image resize. File not created!'.format(index))
+        REPORT['process_errors'] += 1
+        return False
+
+    image.thumbnail(size)
+    image.save(img_path + '.jpg', "JPEG")
+    return True
 
 
 def print_report(runtime: float):
