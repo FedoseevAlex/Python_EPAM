@@ -3,7 +3,6 @@
 Image downloader module. Contains all required logic to download images from file with url's and resize them.
 """
 
-
 import argparse
 import os
 import requests
