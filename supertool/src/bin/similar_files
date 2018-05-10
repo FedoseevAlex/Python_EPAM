@@ -19,7 +19,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Find similar files.', usage='similar_files [options] directory')
 
     parser.add_argument('directory', type=str, help='Target directory')
-    parser.add_argument('-v', '--verbose',  help='Enable debug output', action='store_true')
     parser.add_argument('-r', '--recursively', help='Check subdirectories for similar files',
                         action='store_true')
     args = parser.parse_args()

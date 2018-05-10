@@ -23,6 +23,10 @@ def similar(**kwargs):
     :type kwargs: dict
     :return: dict -- keys: file hashes, values: paths to similar files
     """
+    if not os.path.exists(kwargs['directory']):
+        print(kwargs['directory'])
+        print('Requested directory does not exist!')
+        return
     # Create directory paths generator
     dirpath_generator = os.walk(kwargs['directory'])
     index_files = dict()
@@ -54,6 +58,7 @@ def similar(**kwargs):
     print_work(index_files)
     return index_files
 
+
 def print_work(duplicates: dict):
     """
     Handles output for user.
@@ -67,7 +72,7 @@ def print_work(duplicates: dict):
         for index, files in enumerate(duplicates.values(), start=1):
             print('\tSimilar group {}\n'.format(index))
             print(*files, sep='\n')
-            print(r'*' * 30, end='\n\n')
+            print('*' * 30, end='\n\n')
     else:
         print('No similar files found!')
 

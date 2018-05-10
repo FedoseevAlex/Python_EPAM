@@ -6,6 +6,7 @@ from setuptools import setup, find_packages
 
 DISTRO_ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
 
+
 def extract_requirements(file):
     """
     Extract requirements from requirements file.
