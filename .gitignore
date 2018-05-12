@@ -1,10 +1,10 @@
 .idea*
 htmlcov*
 __*
-supertool/venv*
+*/venv*
+*/.ipynb_*
 supertool/src/supertool*
 supertool/log*
 supertool/src/tests/tmp*  
-Downloader/venv*
 Downloader/temp*
 Downloader/pictures.txt
