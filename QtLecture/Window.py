@@ -1,104 +1,96 @@
+#! /usr/bin/env python3.6
+"""
+Simple GUI calculator using PyQt5.
+Supported operations: +, -, *, /, ^
+Operates with integers.
+"""
 from PyQt5 import QtCore, QtGui, QtWidgets
 import Buttons
 import sys
 from functools import partial
 import operator
 
+
 class MainApplication(QtWidgets.QMainWindow):
+    """
+    Main application class. Handles calculator logic itself.
+    """
     def __init__(self):
+        """
+        Initialising method for MainApplication class.
+        Sets up user interface and connect buttons to handler functions.
+        """
         super(MainApplication, self).__init__()
 
         self.ui = Buttons.Ui_Form()
         self.ui.setupUi(self)
-        #self.ui.button.clicked.connect(self.button_pressed)
         self._input = str()
-        self.operations = {'+': operator.add, '*': operator.mul,
-                           '/': operator.truediv, '-': operator.sub,
-                           '^': operator.pow}
-        self._x = self._y = None
-        self._op = None
-
-        # Number button creating
-        for i in range(9):
-            col = i % 3
-            row = i // 3
-            button = QtWidgets.QPushButton(self.ui.gridLayoutWidget)
-            sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-            sizePolicy.setHorizontalStretch(0)
-            sizePolicy.setVerticalStretch(0)
-            sizePolicy.setHeightForWidth(button.sizePolicy().hasHeightForWidth())
-            button.setSizePolicy(sizePolicy)
-            font = QtGui.QFont()
-            font.setPointSize(15)
-            font.setBold(True)
-            font.setWeight(75)
-            button.setFont(font)
-            button.setObjectName("button_{}".format(str(i + 1)))
-            self.ui.gridLayout.addWidget(button, row, col, 1, 1)
-            button.setText(str(i + 1))
-
-            button.clicked.connect(partial(self.number_pressed, str(i + 1)))
-
-        # Operation buttons created
-        ops_to_display = ['+', '-', '*', '/', '^', 'AC', '=']
-        for i, sign in enumerate(ops_to_display):
-            button = QtWidgets.QPushButton(self.ui.gridLayoutWidget_2)
-            sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-            sizePolicy.setHorizontalStretch(0)
-            sizePolicy.setVerticalStretch(0)
-            sizePolicy.setHeightForWidth(button.sizePolicy().hasHeightForWidth())
-            button.setSizePolicy(sizePolicy)
-            font = QtGui.QFont()
-            font.setPointSize(15)
-            font.setBold(True)
-            font.setWeight(75)
-            button.setFont(font)
-            button.setObjectName(sign)
-            self.ui.operations.addWidget(button, i, 0, 1, 1)
-            button.setText(sign)
-
-            button.clicked.connect(partial(self.operation_pressed(), sign))
-
-
-    def number_pressed(self, char):
-        to_display = ''
-        if char in self.operations.keys():
-            if not set(self._input).intersection(self.operations.keys()):
-                self._input = self._input + char
-            elif self._input.endswith(tuple(self.operations.keys())):
-                self._input = self._input[0: -1] + char
-            self._op = char
-            self._x = self.ui.lcdNumber.value()
-            self._input = ''
-        elif char == 'AC':
-            self.clear_all()
-        elif char == '=':
-            self._y = self.ui.lcdNumber.value()
-            res = self.operations[self._op](self._x, self._y)
-            print('Res = {}'.format(res))
-            self.ui.lcdNumber.display(str(int(res)))
-            self.clear_all()
-            return
-        else:
-            self._input += char
-
-        self.ui.lcdNumber.display(self._input)
-
-    def operation_pressed(self):
-        pass
-
-    def clear_all(self):
-        self._input = ''
-        #self.ui.lcdNumber.display(self._input)
         self._x = None
         self._y = None
         self._op = None
+        self._op_table = {'add': operator.add, 'sub': operator.sub,
+                          'mul': operator.mul, 'div': operator.truediv,
+                          'pow': operator.pow}
+
+        for num in range(10):
+            getattr(self.ui, f'pushButton_{num}').clicked.connect(partial(self.numeric_pressed, str(num)))
+
+        for operation in self._op_table.keys():
+            getattr(self.ui, f'pushButton_{operation}').clicked.connect(partial(self.operation_pressed, operation))
+
+        self.ui.pushButton_calc.clicked.connect(self.calculate)
+        self.ui.pushButton_ac.clicked.connect(self.clear_all)
+
+    def numeric_pressed(self, num: str) -> None:
+        """
+        Callback method called when numeric buttons pressed.
+        Number of clicked function passed as argument.
+
+        :param num: number of pressed button
+        :type num: str
+        :return: None
+        """
+        self._input += num
+        self.ui.LcdDisplay.display(self._input)
+
+    def operation_pressed(self, operation: str) -> None:
+        """
+        Callback method called when operation buttons pressed.
+        Operation name passed as argument.
+
+        :param operation: operation to perform e.g. 'add'
+        :type operation: str
+        :return: None
+        """
+        self._x = self.ui.LcdDisplay.value()
+        self._op = operation
+        self._input = ''
+
+    def clear_all(self):
+        """
+        Callback for 'AC' button. This function clears display, buffer and operands variables.
+        """
+        self._x = None
+        self._y = None
+        self._op = None
+        self._input = ''
+        self.ui.LcdDisplay.display('')
+
+    def calculate(self):
+        """
+        Callback for '=' button. Perform evaluating and displaying result of calculation.
+        """
+        self._y = self.ui.LcdDisplay.value()
+        if None not in [self._x, self._y, self._op]:
+            res = self._op_table[self._op](int(self._x), int(self._y))
+            self.ui.LcdDisplay.display(str(res))
+            self._input = ''
+            self._op = None
 
 
-        # self.ui.lcdNumber.display(number)
+if __name__ == '__main__':
+    app = QtWidgets.QApplication(sys.argv)
+    window = MainApplication()
+    window.show()
 
-app = QtWidgets.QApplication(sys.argv)
-window = MainApplication()
-window.show()
-
-sys.exit(app.exec_())
+    sys.exit(app.exec_())
