@@ -1,4 +1,4 @@
-#! /usr/bin/env python3.6
+#!/usr/bin/env python3.6
 """
 Simple GUI calculator using PyQt5.
 Supported operations: +, -, *, /, ^
@@ -62,6 +62,11 @@ class MainApplication(QtWidgets.QMainWindow):
         :type operation: str
         :return: None
         """
+        # Uncomment to enable operations with negative numbers
+        # if not self._input and operation == 'sub':
+        #     self._input += '-'
+        #     self.ui.LcdDisplay.display(self._input)
+        #     return
         self._x = self.ui.LcdDisplay.value()
         self._op = operation
         self._input = ''
