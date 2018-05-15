@@ -223,7 +223,7 @@ class Ui_Form(object):
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Form"))
+        Form.setWindowTitle(_translate("Form", "Calculator"))
         self.pushButton_mul.setText(_translate("Form", "*"))
         self.pushButton_div.setText(_translate("Form", "/"))
         self.pushButton_9.setText(_translate("Form", "9"))
